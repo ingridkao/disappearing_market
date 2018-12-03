@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.f7798d2ae9f9f8f11f3ef5881ef4300b.js"
+  "/dist/precache-manifest.3e1d11e44b8b3ed1dd3c9eb518f8b444.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "disappearing"});
