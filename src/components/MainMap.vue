@@ -4,11 +4,22 @@
             <button v-for="(item, index) in yearList" :key="index" :class="currentYear(yearActived, item)" @click="selectYear(item)">{{ item }}</button>
         </div>
         <div class="boxCtn typeBox">
-            <p v-for="(item, index) in typeList" :key="index">
-                <span class="point" :class="index">●</span>
+            <button v-for="(item, index) in typeList" :key="index" :class="[index, (typeActivedArray.includes(index))? 'typeActived': '', (typeActivedArray.length == 0)? 'allDisplay': '']" @click="selectType(index)">
                 <img :alt="item.name" :src="item.img">
-            </p>
+            </button>
         </div>
+        <transition name="fade" mode="out-in">
+            <div class="boxCtn infoBtnBox" v-show="!explanationDisplay">
+                <button type="button" @click="toggleExplanationDisplay">...</button>
+            </div>
+        </transition>
+        <transition name="fade" mode="out-in" enter-active-class="down" leave-active-class="down">
+            <div class="boxCtn explanationBox" v-show="explanationDisplay">
+                <h6>「北京切除」一年後：</h6>
+                <h6>除了「低端人口」，家門口的花市、菜市場也被「切除」了</h6>
+                <p>近幾年，超過400個花市、菜市場和批發市場等被從北京地圖上擦除。端傳媒通過梳理公開資料，向你展示其中一些消失的市場和它們的故事。</p>
+            </div>
+        </transition>
         <LMap :min-zoom="minZoom" :maxZoom="maxZoom" :zoom="zoom" :center="center" :bounds="bounds" :max-bounds="maxBounds">
             <LTileLayer :url="url" :attribution="attribution"></LTileLayer> 
             <LCircle v-for="(item, index) in currentData" :key="index"
@@ -38,23 +49,28 @@ export default {
     data() {
         const coordtransform = require('coordtransform');
         return {
-            //url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
-            //attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            //Dark
+            //url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+            //attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            //Black & white
             url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             minZoom: 11,
             maxZoom: 16,
             zoom: 11,
-            center: [39.89, 116.445],
-            bounds: L.latLngBounds([[39.38, 116.11], [40.4, 116.77]]),
-            maxBounds: L.latLngBounds([[39.38, 116.11], [40.4, 116.77]]),
-            circleRadius: 150,
+            center: [39.89, 116.50],
+            bounds: L.latLngBounds([[39.49, 116.10], [40.29, 116.90]]),
+            maxBounds: L.latLngBounds([[39.49, 116.10], [40.29, 116.90]]),
+            circleRadius: 160,
             fillOpacity: 0.8,
-            concatObj:{},
             coordtransform: coordtransform,
+            explanationDisplay: true,
+            explanationTimeout: true,
+            concatObj:{},
             yearList:[2014, 2015, 2016, 2017, 2018],
             yearActived: null,
-            '2014': {
+            typeActivedArray: [],
+            '2013': {
                 type1 : [
                     {
                         pos: [116.368418, 39.880793],
@@ -89,7 +105,7 @@ export default {
                 type6 : [],
                 type7 : []
             },
-            '2015': {
+            '2014': {
                 type1 : [
                     {
                         pos: [116.368987, 39.931083],
@@ -111,7 +127,7 @@ export default {
                 type6 : [],
                 type7 : []
             },
-            '2016': {
+            '2015': {
                 type1 : [],
                 type2 : [
                     {
@@ -173,7 +189,7 @@ export default {
                 ],
                 type7 : []
             },
-            '2017': {
+            '2016': {
                 type1 : [
                     {
                         pos: [116.369634, 39.934956],
@@ -281,7 +297,7 @@ export default {
                 type6 : [],
                 type7 : []
             },
-            '2018': {
+            '2017': {
                 type1 : [
                     {
                         pos: [116.673878, 39.895764],
@@ -424,52 +440,59 @@ export default {
             }
         };
     },
+    created() {
+        this.disappearBlock();
+    },
     computed: {
         currentData(){
-            let yearActived = (this.yearActived == null)? '2014': this.yearActived; 
-            // 1. Get data about active year
-            let concatObj = {};
-            concatObj = _.cloneDeep(this['2018']);
-            if(yearActived < 2018){
-                for (let index = yearActived; index < 2018; index++) {
-                    for (const key in this[index]['type1']) {
-                        concatObj['type1'].push(this[index]['type1'][key]);
-                    }   
-                    for (const key in this[index]['type2']) {
-                        concatObj['type2'].push(this[index]['type2'][key]);
-                    }   
-                    for (const key in this[index]['type3']) {
-                        concatObj['type3'].push(this[index]['type3'][key]);
-                    }   
-                    for (const key in this[index]['type4']) {
-                        concatObj['type4'].push(this[index]['type4'][key]);
-                    }   
-                    for (const key in this[index]['type5']) {
-                        concatObj['type5'].push(this[index]['type5'][key]);
-                    }   
-                    for (const key in this[index]['type6']) {
-                        concatObj['type6'].push(this[index]['type6'][key]);
-                    }   
-                    for (const key in this[index]['type7']) {
-                        concatObj['type7'].push(this[index]['type7'][key]);
-                    }   
-                }
-            }
-            this.concatObj = concatObj;
-            //2. Translate data for market type
-            let typeList = this.typeList;
+            let yearActived = (this.yearActived == null)? '2013': this.yearActived; 
             let resultObj = [];
-            for (let index = 1; index <= Object.keys(typeList).length; index++) {
-                concatObj['type' + index].map( item => {
-                    let latlon = this.coordtransform.gcj02towgs84(item.pos[0], item.pos[1]);
-                    let obj = {
-                        type : 'type' + index,
-                        color : typeList['type' + index].color,
-                        pos: latlon.reverse(),
-                        text: item.text
-                    };
-                    resultObj.push(obj);
-                });
+            if(yearActived < 2018){
+                // 1. Get data about active year
+                let concatObj = _.cloneDeep(this['2017']);
+                if(yearActived < 2017){
+                    for (let index = yearActived; index < 2018; index++) {
+                        for (const key in this[index]['type1']) {
+                            concatObj['type1'].push(this[index]['type1'][key]);
+                        }   
+                        for (const key in this[index]['type2']) {
+                            concatObj['type2'].push(this[index]['type2'][key]);
+                        }   
+                        for (const key in this[index]['type3']) {
+                            concatObj['type3'].push(this[index]['type3'][key]);
+                        }   
+                        for (const key in this[index]['type4']) {
+                            concatObj['type4'].push(this[index]['type4'][key]);
+                        }   
+                        for (const key in this[index]['type5']) {
+                            concatObj['type5'].push(this[index]['type5'][key]);
+                        }   
+                        for (const key in this[index]['type6']) {
+                            concatObj['type6'].push(this[index]['type6'][key]);
+                        }   
+                        for (const key in this[index]['type7']) {
+                            concatObj['type7'].push(this[index]['type7'][key]);
+                        }   
+                    }
+                }
+                this.concatObj = concatObj;
+
+                //2. Translate data for display market
+                for (let index = 1; index <= Object.keys(this.typeList).length; index++) {
+                    //3. Filter not active type
+                    if(this.typeActivedArray.length == 0 || this.typeActivedArray.includes('type' + index)){
+                        concatObj['type' + index].map( item => {
+                            let latlon = this.coordtransform.gcj02towgs84(item.pos[0], item.pos[1]);
+                            let obj = {
+                                type : 'type' + index,
+                                color : this.typeList['type' + index].color,
+                                pos: latlon.reverse(),
+                                text: item.text
+                            };
+                            resultObj.push(obj);
+                        });
+                    }
+                }
             }
             return resultObj;
         }
@@ -478,22 +501,118 @@ export default {
         selectYear(year) {
             this.yearActived = year;
         },
+        selectType(type) {
+            if(this.typeActivedArray.includes(type)){
+                this.typeActivedArray = _.remove(this.typeActivedArray, function(n) {
+                    return n != type;
+                });
+            }else{
+                this.typeActivedArray.push(type);
+            }
+        },
         currentYear(active, year){
-            if((active == null && year ==2014) || (active == year)) return 'yearActived';
+            if(active == year) return 'yearActived';
+        },
+        currentType(active, type){
+            return ((type != null)?type.name: '') + ((active == type)? ' typeActived': '');
         },
         translateClass(item){
             return '<span class="point '+ item.type + '">●</span>' + item.text;
-        }
+        },
+        toggleExplanationDisplay(){
+            this.explanationDisplay = !this.explanationDisplay;
+            if(this.explanationDisplay){
+                this.disappearBlock();
+            }
+        },
+        disappearBlock(){
+            let timer = setTimeout(() => {
+                this.explanationDisplay = false;
+            }, 	6000);     
+        }
+
     }
 };
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+    $defaultPadding : 10px;
     #mapCtn {
         z-index: 0;
-        background: radial-gradient(circle,white,#7c4900);
+        background: radial-gradient(circle,white,#89766a);
         .vue2leaflet-map{
             opacity: 0.8;
+        }
+        .yearBox{
+            bottom: $defaultPadding*5;
+            right: $defaultPadding;
+            width: 100%;
+            height: 3em;
+            z-index: 3;
+            button{
+                width: auto;
+                height: auto;
+                margin-left: .5em;
+                padding: .2em .5em;
+                border-radius: 2px;
+                border: 1.5px solid #333;
+                color: #333;
+                font-size: 1em;
+                font-weight: bold;
+                &:hover{
+                    background-color: rgba(white, 0.2);
+                    box-shadow: 0 0 3px 3px rgba(#999, 0.3);
+                }
+                &.yearActived{
+                    background-color: #e7e3df;
+                    border-color: #000;
+                    color: #000;
+                }
+            }
+            @media screen and (max-width: 600px){
+                button{
+                    // display: block;
+                    // margin-bottom: .5em;
+                }
+            }
+        }
+        .typeBox{
+            right: 5px;
+            top: 0;
+            padding: 0 0 0.3em 0.6em;
+            width: 7em;
+            z-index: 2;
+            text-align: left;
+            button{
+                display: block;
+                position: relative;
+                margin: 0;
+                height: 3.25em;
+                overflow: hidden;
+                img{
+                    width: 100%;
+                }
+                &:after{
+                    content: '';
+                    display: none;
+                    position: absolute;
+                    bottom: 0;
+                    right: 1em;
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 2px 3.5em 2px 0;
+                    border-radius: 2px;
+                    opacity: 0.6;
+                }
+                &:hover:after, &.typeActived:after{
+                    opacity: 1;
+                    border-right-width :5em;
+                }
+                &.allDisplay:after, &.typeActived:after{
+                    display: block;
+                }
+            }
         }
     }
 </style>

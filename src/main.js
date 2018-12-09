@@ -18,11 +18,6 @@ L.Icon.Default.mergeOptions({
 });
 /* eslint-disable */
 
-import 'animate.css'
-import 'fullpage-vue/src/fullpage.css'
-import VueFullpage from 'fullpage-vue'
-Vue.use(VueFullpage)
-
 import _ from 'lodash';
 Vue.prototype._ = _;
 
