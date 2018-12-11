@@ -60,7 +60,9 @@
         <transition name="fade" mode="out-in" enter-active-class="down" leave-active-class="down">
             <div class="boxCtn instructionsBox explanationBox" v-show="explanationDisplay">
                 <button type="button" @click="explanationDisplay = false"></button>
-                <p>2017年，北京常住人口出現自1997年以來首次負增長。以此同時，菜市場、花市、批發市場等低端產業也被連根拔起。近幾年，已有超過400個市場從北京地圖上消失。端傳媒通過梳理公開資料，向你展示其中一些消失的市場和它們的故事。</p>
+                <p>2017年，北京常住人口出現自1997年以來首次負增長。以此同時，菜市場、花市、批發市場等低端產業也被連根拔起。近幾年，已有超過400個市場從北京地圖上消失。端傳媒通過梳理公開資料，向你展示其中一些消失的市場和
+                    <a href="https://theinitium.com/article/20181212-mainland-where-to-go-one-year/" target="_blank">它們的故事</a>。
+                </p>
             </div>
         </transition>
     </div>

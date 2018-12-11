@@ -12,12 +12,15 @@
             <img class="mainTitle png" alt="main title" :src="mainTitleImg">
             <img class="title png" alt="title" :src="titleImg">
             <div class="shareBox">
-                <a href="https://www.facebook.com/sharer.php?s=100&amp;u=https://theinitium.com/article/20181212-mainland-where-to-go-one-year/" target="_blank" title="分享到 facebook">
+                <a href="https://www.facebook.com/sharer.php?s=100&amp;u=https://theinitium.com/article/20181212-mainland-where-to-go-one-year/" onclick="return window.open(this.href,&quot;&quot;,&quot;menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=368,width=600&quot;),!1" title="分享到 facebook">
                     <img :src="require('../assets/facebook.svg')" alt="Facebook">
                 </a>
-                <a href="https://twitter.com/share?url=https://theinitium.com/article/20181212-mainland-where-to-go-one-year/" target="_blank" title="分享到 twitter">
+                <a href="https://twitter.com/share?url=https://theinitium.com/project/20181212-mainland-where-to-go-one-year/&amp;text=北京切除·一年之後&amp;via=initiumnews" onclick="return window.open(this.href,&quot;&quot;,&quot;menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=400,width=600&quot;),!1" title="分享到 twitter">
                     <img :src="require('../assets/twitter.svg')" alt="Twitter">
                 </a>
+                <!-- <a href='http://t.sohu.com/third/post.jsp?content=utf-8&url=https://theinitium.com/article/20181212-mainland-where-to-go-one-year&title=北京切除·一年之後' target="_blank">
+                    <img :src="require('../assets/weibo.svg')" alt="Weibo">
+                </a> -->
             </div>        
         </div>
         <div class="boxCtn editorBox">
@@ -184,8 +187,13 @@ export default {
                     a{
                         display: inline-block;
                         width: 1em;
+                        height: 1em;
                         margin-right: 0.5em;
                         pointer-events: auto;
+                        img{
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                 }
                 @media screen and (max-width: 600px){
@@ -220,13 +228,13 @@ export default {
             }
             &.editorBox{
                 right: $defaultPadding/2;
-                bottom: 1.1em;
+                bottom: $defaultPadding*1.6;
                 z-index: 1;
+                width: calc(100vw - 6em);
                 text-align: right;
                 a{
                     display: block;
                     color: $mainColor;
-                    text-decoration: none;
                     font-size: 0.8em;
                 }
                 p{
@@ -236,6 +244,11 @@ export default {
                     span{
                         margin: 0 0.1em;
                         
+                    }
+                }
+                @media screen and (max-width: 450px){
+                    p{
+                        display: none;
                     }
                 }
             }
@@ -274,6 +287,13 @@ export default {
                 bottom: $defaultPadding*16;
                 padding: 0.5em 1em;
                 background-color: rgba($whiteColor, 0.8);
+                a{
+                    display: inline-block;
+                    font-weight: bold;
+                    color: $brightRed;
+                    border-bottom: 3px solid $brown;
+                    text-indent: 0;
+                }
                 button{
                     position: absolute;
                     top: 0.1em;
