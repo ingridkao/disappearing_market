@@ -120,14 +120,6 @@ h5,  p{
     }
 }
 .boxCtn{
-    &.editorBox{
-        top: $defaultPadding;
-        right: $defaultPadding;
-        font-size: 0.7em;
-        span{
-            margin: 0 1.4em 0 0.7em;
-        }
-    }
     &.moveToBtnBox{
         right: 50%;
         bottom: $defaultPadding*2;

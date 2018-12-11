@@ -4,8 +4,8 @@ module.exports = {
     //baseUrl: process.env.NODE_ENV === 'production' ? '' : '/'
 
     baseUrl: process.env.NODE_ENV === 'production'
-    ? '/disappearing_market/'
+    ? '/disappearing_markets/'
     : '/',
     //outputDir Default: 'dist'
-    outputDir: 'disappearing_market'
+    outputDir: 'disappearing_markets'
 };

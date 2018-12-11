@@ -11,7 +11,22 @@
         <div class="boxCtn titleBox" :class="currentPage">
             <img class="mainTitle png" alt="main title" :src="mainTitleImg">
             <img class="title png" alt="title" :src="titleImg">
+            <div class="shareBox">
+                <a href="https://www.facebook.com/sharer.php?s=100&amp;u=https://theinitium.com/article/20181212-mainland-where-to-go-one-year/" target="_blank" title="分享到 facebook">
+                    <img :src="require('../assets/facebook.svg')" alt="Facebook">
+                </a>
+                <a href="https://twitter.com/share?url=https://theinitium.com/article/20181212-mainland-where-to-go-one-year/" target="_blank" title="分享到 twitter">
+                    <img :src="require('../assets/twitter.svg')" alt="Twitter">
+                </a>
+            </div>        
         </div>
+        <div class="boxCtn editorBox">
+            <a href="https://theinitium.com/" target="_blank">© 2018 Initium Media</a>
+            <p>網頁製作：<span>Ingrid Kao</span></p>
+            <p>視覺設計：<span>Tseng Lee Yu</span></p>
+            <p>數據整理：<span>朱鑒瀅</span></p>
+        </div>
+
         <!-- <div class="boxCtn moveToBtnBox">
             <button type="button" :class="(mapDisplay)? 'map': 'text'" @click="mapDisplay = !mapDisplay">{{(mapDisplay)? '▼': '▲' }}</button>
         </div> -->
@@ -21,6 +36,7 @@
         <!-- <transition name="fade" mode="out-in">
             <MainText v-show="!mapDisplay"></MainText>
         </transition> -->
+
     </div>
 </template>
 
@@ -39,8 +55,8 @@ export default {
             mapDisplay: true,
             // mainTitleImg: require('../assets/main_title.svg'),
             // titleImg: require('../assets/title.svg'),
-            mainTitleImg: require('../assets/main_title.png'),
-            titleImg: require('../assets/title.png'),
+            mainTitleImg: require('../assets/1.png'),
+            titleImg: require('../assets/2.png'),
             typeList:{
                 type1:{
                     name: '農副菜市場',
@@ -92,6 +108,7 @@ export default {
     @import "../assets/basic.scss";
     #home{
         position: relative;
+        height: 100%;
         .mainBlock{
             position: fixed;
             width: 100%;
@@ -132,12 +149,12 @@ export default {
                     top: 4em;
                     left: $defaultPadding;
                 }
-                &.page1{
-                    position: relative;
-                    max-width: 16em;
-                    top: 1em;
-                    left: 3em;
-                }
+                //&.page1{
+                //     position: relative;
+                //     max-width: 16em;
+                //     top: 1em;
+                //     left: 3em;
+                // }
                 .mainTitle{
                     width: 100%;
                     margin-left: -15%;
@@ -155,8 +172,20 @@ export default {
                     }
                     &.png{
                         width: 80%;
-                        margin-top: -20%;
+                        // margin-top: -20%;
+                        margin-top: -25%;
                         margin-left: -10%;
+                    }
+                }
+                .shareBox{
+                    position: absolute;
+                    left: 5%;
+                    top: 75%;
+                    a{
+                        display: inline-block;
+                        width: 1em;
+                        margin-right: 0.5em;
+                        pointer-events: auto;
                     }
                 }
                 @media screen and (max-width: 600px){
@@ -175,7 +204,38 @@ export default {
                     .title.png{
                         margin-top: -25%;
                         margin-left: auto;
-                        margin-right: 10%;
+                        margin-right: 20%;
+                    }
+                    .shareBox{
+                        left: auto;
+                        right: 3%;
+                        top: 1em;
+                        a{
+                            display: block;
+                            margin-right: 0;
+                            margin-bottom: 0.5em;
+                        }
+                    }
+                }
+            }
+            &.editorBox{
+                right: $defaultPadding/2;
+                bottom: 1.1em;
+                z-index: 1;
+                text-align: right;
+                a{
+                    display: block;
+                    color: $mainColor;
+                    text-decoration: none;
+                    font-size: 0.8em;
+                }
+                p{
+                    display: inline-block;
+                    color: $mainColor;
+                    font-size: 0.5em;
+                    span{
+                        margin: 0 0.1em;
+                        
                     }
                 }
             }
@@ -209,20 +269,42 @@ export default {
             }
             &.explanationBox{
                 z-index: 3;
-                width: 90%;
-                max-width: 36em;
-                left: 5%;
-                bottom: $defaultPadding*13;
+                width: 32em;
+                left: calc(50vw - 16em);
+                bottom: $defaultPadding*16;
                 padding: 0.5em 1em;
-                background-color: rgba($whiteColor, 0.7);
+                background-color: rgba($whiteColor, 0.8);
+                button{
+                    position: absolute;
+                    top: 0.1em;
+                    right: 0.1em;
+                    width: 1.5em;
+                    height: 1.5em;
+                    &:before, &:after {
+                        content: '';
+                        position: absolute;
+                        width: 100%;
+                        top: 50%;
+                        left: 0;
+                        background: $brightRed;
+                        border-radius: 5px;
+                        height: 4px;
+                    }
+                    &:before{
+                        transform: rotate(45deg);
+                    }
+                    &:after {
+                        transform: rotate(-45deg);
+                    }
+                }
                 p{
                     text-indent: 2em;
                 }
                 @media screen and (max-width: 600px){
                     width: calc(100vw - #{$defaultPadding});
                     left: $defaultPadding/2;
-                    bottom: $defaultPadding*9;
-                    padding: 0.3em 0.9em;
+                    bottom: 25vh;
+                    padding: 1em 1em 0.5em;
                 }
             }
             &.descBox{

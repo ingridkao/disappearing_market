@@ -47,8 +47,8 @@
             <LTileLayer :url="url" :attribution="attribution"></LTileLayer> 
             <LCircle v-for="(item, index) in currentData" :key="index"
                 :lat-lng = "item.pos"
-                :radius = 160
-                :weight = 1.5
+                :radius = 210
+                :weight = 1
                 :fillColor = "item.color"
                 :fillOpacity = fillOpacity
                 :opacity = opacity
@@ -59,8 +59,8 @@
         </LMap>
         <transition name="fade" mode="out-in" enter-active-class="down" leave-active-class="down">
             <div class="boxCtn instructionsBox explanationBox" v-show="explanationDisplay">
-                <h6>2017年，北京常住人口出現自1997年以來首次負增長。</h6>
-                <p>以此同時，菜市場、花市、批發市場等低端產業也被連根拔起。近幾年，已有超過400個市場從北京地圖上消失。端傳媒通過梳理公開資料，向你展示其中一些消失的市場和它們的故事。</p>
+                <button type="button" @click="explanationDisplay = false"></button>
+                <p>2017年，北京常住人口出現自1997年以來首次負增長。以此同時，菜市場、花市、批發市場等低端產業也被連根拔起。近幾年，已有超過400個市場從北京地圖上消失。端傳媒通過梳理公開資料，向你展示其中一些消失的市場和它們的故事。</p>
             </div>
         </transition>
     </div>
@@ -481,7 +481,7 @@ export default {
         };
     },
     created() {
-        this.disappearExplana();
+        //this.disappearExplana();
         this.disappearInstructions();
     },
     computed: {
@@ -546,9 +546,9 @@ export default {
         },
         toggleExplanationDisplay(){
             this.explanationDisplay = !this.explanationDisplay;
-            if(this.explanationDisplay){
-                this.disappearExplana();
-            }
+            // if(this.explanationDisplay){
+            //     this.disappearExplana();
+            // }
         },
         toggleInstructionsDisplay(){
             this.instructionsDisplay = !this.instructionsDisplay;
@@ -579,7 +579,7 @@ export default {
             pointer-events: none;
             width: 80%;
             left: 10%;
-            bottom: $defaultPadding;
+            bottom: $defaultPadding*4;
             z-index: 3;
             .instructionsBox.descBox{
                 position:absolute;
