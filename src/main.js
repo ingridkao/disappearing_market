@@ -21,6 +21,11 @@ L.Icon.Default.mergeOptions({
 import _ from 'lodash';
 Vue.prototype._ = _;
 
+import VueSlideBar from 'vue-slide-bar';
+Vue.component('vue-slide-bar', VueSlideBar);
+
+import './assets/customize.scss';
+
 new Vue({
     router,
     store,

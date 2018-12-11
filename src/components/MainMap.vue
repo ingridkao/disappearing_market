@@ -1,37 +1,68 @@
 <template>
     <div id="mapCtn" class="mainBlock">
         <div class="boxCtn yearBox">
-            <button v-for="(item, index) in yearList" :key="index" :class="currentYear(yearActived, item)" @click="selectYear(item)">{{ item }}</button>
+            <!-- <div class="lineBox"></div>
+            <div class="yearBtnBox">
+                <button v-for="(item, index) in yearList" :key="index" :class="currentYear(yearActived, item)" @click="selectYear(item)">
+                    {{ item }}
+                </button>
+            </div> -->
+            <vue-slide-bar v-model="yearActived"
+                        :data="yearList"
+                        :range="range"
+                        @callbackRange="selectYear">
+                <template slot="tooltip" slot-scope="tooltip">
+                    <!-- <img :src="rangeImg"> -->
+                </template>
+            </vue-slide-bar>
+            <transition name="fade" mode="out-in">
+                <div class="instructionsBox descBox" v-show="instructionsDisplay">
+                    <p>點擊查看逐年進展</p>
+                </div>
+            </transition>
         </div>
         <div class="boxCtn typeBox">
             <button v-for="(item, index) in typeList" :key="index" :class="[index, (typeActivedArray.includes(index))? 'typeActived': '', (typeActivedArray.length == 0)? 'allDisplay': '']" @click="selectType(index)">
-                <img :alt="item.name" :src="item.img">
+                <!-- <img :alt="item.name" :src="item.img"> -->
+                <p>{{ item.name }}</p>
             </button>
+            <transition name="fade" mode="out-in">
+                <div class="instructionsBox descBox" v-show="instructionsDisplay">
+                    <p>點擊了解各類市場被切除情況</p>
+                    <p>點擊圓點<span></span>查看市場名字</p>
+                </div>
+            </transition>
         </div>
-        <transition name="fade" mode="out-in">
-            <div class="boxCtn infoBtnBox" v-show="!explanationDisplay">
-                <button type="button" @click="toggleExplanationDisplay">...</button>
+        <transition name="fade" mode="out-in" enter-active-class="up" leave-active-class="up">
+            <div class="boxCtn infoBtnBox instructionsBtn" v-show="!instructionsDisplay">
+                <button type="button" @click="toggleInstructionsDisplay">?</button>
             </div>
         </transition>
-        <transition name="fade" mode="out-in" enter-active-class="down" leave-active-class="down">
-            <div class="boxCtn explanationBox" v-show="explanationDisplay">
-                <h6>「北京切除」一年後：</h6>
-                <h6>除了「低端人口」，家門口的花市、菜市場也被「切除」了</h6>
-                <p>近幾年，超過400個花市、菜市場和批發市場等被從北京地圖上擦除。端傳媒通過梳理公開資料，向你展示其中一些消失的市場和它們的故事。</p>
+        <transition name="fade" mode="out-in" enter-active-class="up" leave-active-class="up">
+            <div class="boxCtn infoBtnBox explanationBtn" v-show="!explanationDisplay">
+                <button type="button" @click="toggleExplanationDisplay">...</button>
             </div>
         </transition>
         <LMap :min-zoom="minZoom" :maxZoom="maxZoom" :zoom="zoom" :center="center" :bounds="bounds" :max-bounds="maxBounds">
             <LTileLayer :url="url" :attribution="attribution"></LTileLayer> 
             <LCircle v-for="(item, index) in currentData" :key="index"
-                :lat-lng="item.pos"
-                :radius="circleRadius"
+                :lat-lng = "item.pos"
+                :radius = 160
+                :weight = 1.5
+                :fillColor = "item.color"
                 :fillOpacity = fillOpacity
-                :color="item.color"
-                :fillColor="item.color"
+                :opacity = opacity
+                :color = pathColor
             >
                 <l-popup :content="translateClass(item)"></l-popup>
             </LCircle>
         </LMap>
+        <transition name="fade" mode="out-in" enter-active-class="down" leave-active-class="down">
+            <div class="boxCtn instructionsBox explanationBox" v-show="explanationDisplay">
+                <h6>2017年，北京常住人口出現自1997年以來首次負增長。</h6>
+                <p>以此同時，菜市場、花市、批發市場等低端產業也被連根拔起。近幾年，已有超過400個市場從北京地圖上消失。端傳媒通過梳理公開資料，向你展示其中一些消失的市場和它們的故事。</p>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -58,16 +89,25 @@ export default {
             minZoom: 11,
             maxZoom: 16,
             zoom: 11,
-            center: [39.89, 116.50],
-            bounds: L.latLngBounds([[39.49, 116.10], [40.29, 116.90]]),
-            maxBounds: L.latLngBounds([[39.49, 116.10], [40.29, 116.90]]),
-            circleRadius: 160,
+            center: [39.88, 116.44],
+            bounds: L.latLngBounds([[39.48, 116.04], [40.28, 116.84]]),
+            maxBounds: L.latLngBounds([[39.48, 116.04], [40.28, 116.84]]),
             fillOpacity: 0.8,
+            opacity: 0.9,
+            pathColor: '#666',
             coordtransform: coordtransform,
             explanationDisplay: true,
-            explanationTimeout: true,
+            instructionsDisplay: true,
             concatObj:{},
             yearList:[2014, 2015, 2016, 2017, 2018],
+            rangeImg: require('../assets/rectangle-slider.svg'),
+            range: [
+                { label: '2014' },
+                { label: '2015' },
+                { label: '2016' },
+                { label: '2017' },
+                { label: '2018' }
+            ],
             yearActived: null,
             typeActivedArray: [],
             '2013': {
@@ -441,7 +481,8 @@ export default {
         };
     },
     created() {
-        this.disappearBlock();
+        this.disappearExplana();
+        this.disappearInstructions();
     },
     computed: {
         currentData(){
@@ -452,27 +493,11 @@ export default {
                 let concatObj = _.cloneDeep(this['2017']);
                 if(yearActived < 2017){
                     for (let index = yearActived; index < 2018; index++) {
-                        for (const key in this[index]['type1']) {
-                            concatObj['type1'].push(this[index]['type1'][key]);
-                        }   
-                        for (const key in this[index]['type2']) {
-                            concatObj['type2'].push(this[index]['type2'][key]);
-                        }   
-                        for (const key in this[index]['type3']) {
-                            concatObj['type3'].push(this[index]['type3'][key]);
-                        }   
-                        for (const key in this[index]['type4']) {
-                            concatObj['type4'].push(this[index]['type4'][key]);
-                        }   
-                        for (const key in this[index]['type5']) {
-                            concatObj['type5'].push(this[index]['type5'][key]);
-                        }   
-                        for (const key in this[index]['type6']) {
-                            concatObj['type6'].push(this[index]['type6'][key]);
-                        }   
-                        for (const key in this[index]['type7']) {
-                            concatObj['type7'].push(this[index]['type7'][key]);
-                        }   
+                        for (let i = 1; i < 8; i++) {
+                            for (const key in this[index]['type' + i]) {
+                                concatObj['type' + i].push(this[index]['type' + i][key]);
+                            }   
+                        }  
                     }
                 }
                 this.concatObj = concatObj;
@@ -499,7 +524,7 @@ export default {
     },
     methods: {
         selectYear(year) {
-            this.yearActived = year;
+            this.yearActived = (this.yearActived == year)? null: year;
         },
         selectType(type) {
             if(this.typeActivedArray.includes(type)){
@@ -522,95 +547,115 @@ export default {
         toggleExplanationDisplay(){
             this.explanationDisplay = !this.explanationDisplay;
             if(this.explanationDisplay){
-                this.disappearBlock();
+                this.disappearExplana();
             }
         },
-        disappearBlock(){
+        toggleInstructionsDisplay(){
+            this.instructionsDisplay = !this.instructionsDisplay;
+            if(this.instructionsDisplay){
+                this.disappearInstructions();
+            }
+        },
+        disappearExplana(){
             let timer = setTimeout(() => {
                 this.explanationDisplay = false;
-            }, 	6000);     
+            }, 	12000);     
+        },
+        disappearInstructions(){
+            let timer = setTimeout(() => {
+                this.instructionsDisplay = false;
+            }, 	8000);     
         }
 
     }
 };
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-    $defaultPadding : 10px;
+    @import "../assets/basic.scss";
     #mapCtn {
         z-index: 0;
-        background: radial-gradient(circle,white,#89766a);
-        .vue2leaflet-map{
-            opacity: 0.8;
-        }
+        background: radial-gradient(circle,white,$mainColor);
         .yearBox{
-            bottom: $defaultPadding*5;
-            right: $defaultPadding;
-            width: 100%;
-            height: 3em;
+            pointer-events: none;
+            width: 80%;
+            left: 10%;
+            bottom: $defaultPadding;
             z-index: 3;
-            button{
-                width: auto;
-                height: auto;
-                margin-left: .5em;
-                padding: .2em .5em;
-                border-radius: 2px;
-                border: 1.5px solid #333;
-                color: #333;
-                font-size: 1em;
-                font-weight: bold;
-                &:hover{
-                    background-color: rgba(white, 0.2);
-                    box-shadow: 0 0 3px 3px rgba(#999, 0.3);
+            .instructionsBox.descBox{
+                position:absolute;
+                width: 7em;
+                left: calc(50% - 4em);
+                bottom: 0.25em;
+                p{
+                    text-align: center;
                 }
-                &.yearActived{
-                    background-color: #e7e3df;
-                    border-color: #000;
-                    color: #000;
-                }
-            }
-            @media screen and (max-width: 600px){
-                button{
-                    // display: block;
-                    // margin-bottom: .5em;
-                }
+                &:before{
+                    top: -7px;
+                    right: 45%;
+                }       
             }
         }
         .typeBox{
-            right: 5px;
-            top: 0;
-            padding: 0 0 0.3em 0.6em;
-            width: 7em;
+            top: $defaultPadding;
+            right: $defaultPadding;
+            padding-right: 0.5em;
             z-index: 2;
-            text-align: left;
             button{
-                display: block;
                 position: relative;
-                margin: 0;
-                height: 3.25em;
-                overflow: hidden;
-                img{
+                display: block;
+                width: 100%;
+                margin-bottom: 0.5em;
+                p{
                     width: 100%;
+                    font-size: 1.5em;
+                    font-weight: bold;
+                    text-align: right;
+                    letter-spacing: .1em;
+                    color: lighten($darkColor, 10);
+                    text-shadow: 0 1px 1px lighten($darkColor, 40);
                 }
                 &:after{
                     content: '';
                     display: none;
                     position: absolute;
-                    bottom: 0;
-                    right: 1em;
+                    // right: 1em;
+                    bottom: 0.3em;
+                    right: -0.5em;
                     width: 0;
                     height: 0;
                     border-style: solid;
-                    border-width: 2px 3.5em 2px 0;
+                    border-width: 0.3em 3.5em 0.2em 0;
                     border-radius: 2px;
-                    opacity: 0.6;
+                    opacity: 0.5;
+                }
+                &:hover p{
+                    color: $darkColor;
+                }
+                &.typeActived p{
+                    color: $black;
                 }
                 &:hover:after, &.typeActived:after{
-                    opacity: 1;
+                    opacity: 0.8;
                     border-right-width :5em;
                 }
                 &.allDisplay:after, &.typeActived:after{
                     display: block;
+                }
+            }
+            .instructionsBox.descBox{
+                &:before{
+                    right: 7px;
+                    top: -19px;
+                    margin-top: 0.75em;
+                }       
+            }
+            @media screen and (max-width: 600px){
+                top: 7em;
+                button{
+                    margin-bottom: 0.2em;
+                    p{
+                        font-size: 1.2em;
+                    }
                 }
             }
         }

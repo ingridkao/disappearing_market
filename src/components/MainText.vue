@@ -119,6 +119,7 @@ export default {
                 }
                 p{
                     margin: 1em 0;
+                    text-indent: 2em;
                 }
             }
             @media screen and (max-width: 600px){

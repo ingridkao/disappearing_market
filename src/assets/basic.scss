@@ -1,0 +1,171 @@
+@import "./definition";
+
+*{
+    margin: 0;
+    padding: 0;
+}
+button, a{
+    background-color: transparent;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+p{
+    text-align: left;
+}
+h5,  p{
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+.circleBtn {
+    border-radius: 50%;
+    width: 2.5em;
+    height: 2.5em;
+    border: 1.5px solid $darkColor;
+    color: $darkColor;
+    text-align: center;
+    background-color: rgba($whiteColor, 0.2);
+    &:hover{
+        box-shadow: 0 0 3px 2px rgba(lighten($darkColor, 15), 0.3);
+    }
+}
+
+.fade-enter-active, .fade-leave-active{
+    transition: all .8s ease;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+.fade-enter {
+    transform: translateY(-40px);
+    &.up{
+        transform: translateY(80px);
+    }
+    &.down{
+        transform: translateY(-80px);
+    }
+}
+.fade-leave-to {
+    transform: translateY(40px);
+    &.up{
+        transform: translateY(-80px);
+    }
+    &.down{
+        transform: translateY(80px);
+    }
+}
+
+@keyframes zoomAnimate {
+    0% {
+        transform:scale(1,1);
+        box-shadow: 0 0 4px 2px rgba($darkColor, 0.5);
+    }
+    50% {
+        transform:scale(1.1,1.1);
+        box-shadow: 0 0 2px 1px rgba($darkColor, 0.3);
+    }
+    100% {
+        transform:scale(1,1);
+        box-shadow: 0 0 4px 2px rgba($darkColor, 0.5);
+    }
+}
+
+@keyframes bounceBottom {
+    from { bottom: $defaultPadding*2; }
+    to { bottom: $defaultPadding*3; }
+}
+
+//Last version style
+.yearBox{
+    //width: 100%;
+    //height: 3em;
+    //right: 0;
+    //bottom: $defaultPadding*7;
+    .lineBox{
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        top: 2em;
+        z-index: -1;
+        background-color: $mainColor;
+        pointer-events: none;
+    }
+    .yearBtnBox{
+        z-index: 1;
+        button{
+            width: 4em;
+            height: 4em;
+            border-radius: 50%;
+            padding: .2em;
+            font-size: 1em;
+            font-weight: bold;
+            color: $darkColor;
+            border: 3px solid $mainColor;
+            background-color: $mainBackGroundColor;
+            margin-right: calc(15% - 4em);
+            &:first-child{
+                margin-left: calc(15% - 4em);
+            }
+            &:hover{
+                box-shadow: 0 0 3px 2px rgba(lighten($darkColor, 15), 0.3);
+            }
+            &.yearActived{
+                color:  $mainColor;
+                background-color: $whiteColor;
+                animation: zoomAnimate 2s infinite ease-in;
+            }
+        }
+    }
+}
+.boxCtn{
+    &.editorBox{
+        top: $defaultPadding;
+        right: $defaultPadding;
+        font-size: 0.7em;
+        span{
+            margin: 0 1.4em 0 0.7em;
+        }
+    }
+    &.moveToBtnBox{
+        right: 50%;
+        bottom: $defaultPadding*2;
+        z-index: 1;
+        margin-left: -1.25em;
+        animation: bounceBottom 1s;
+        animation-iteration-count: infinite;
+        button{
+            @extend .circleBtn;
+            position: relative;
+            &:after{
+                content: '';
+                position: absolute;
+                width: 4em;
+                bottom: -1.5em;
+                left: -1em;
+                font-size: 0.6em;
+                overflow: hidden;
+            }
+            &.map:after{
+                content: '了解更多';
+            }
+            &.text:after{
+                content: '回到地圖';
+            }
+        }
+    }
+}
+//For image style
+//.typeBox{
+    // right: 5px;
+    // top: 0;
+    // padding: 0 0 0.3em 0.6em;
+    // width: 7em;
+    // text-align: left;
+    // overflow: hidden;
+    // height: 3.25em;
+    // img{
+    //     width: 100%;
+    // }
+//}
