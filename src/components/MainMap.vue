@@ -82,11 +82,7 @@ export default {
     data() {
         const coordtransform = require('coordtransform');
         return {
-            //Dark
-            //url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-            //attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            //Black & white
-            url: 'http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png',
+            url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             minZoom: 11,
             maxZoom: 16,
@@ -581,7 +577,7 @@ export default {
             pointer-events: none;
             width: 80%;
             left: 10%;
-            bottom: $defaultPadding*4;
+            bottom: #{$defaultPadding*4};
             z-index: 3;
             .instructionsBox.descBox{
                 position:absolute;
@@ -598,8 +594,8 @@ export default {
             }
         }
         .typeBox{
-            top: $defaultPadding;
-            right: $defaultPadding;
+            top: #{$defaultPadding};
+            right: #{$defaultPadding};
             padding-right: 0.5em;
             z-index: 2;
             button{

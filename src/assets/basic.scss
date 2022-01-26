@@ -74,16 +74,12 @@ h5,  p{
 }
 
 @keyframes bounceBottom {
-    from { bottom: $defaultPadding*2; }
-    to { bottom: $defaultPadding*3; }
+    from { bottom: #{$defaultPadding*2}; }
+    to { bottom: #{$defaultPadding*3}; }
 }
 
 //Last version style
 .yearBox{
-    //width: 100%;
-    //height: 3em;
-    //right: 0;
-    //bottom: $defaultPadding*7;
     .lineBox{
         position: absolute;
         width: 100%;
@@ -123,7 +119,7 @@ h5,  p{
 .boxCtn{
     &.moveToBtnBox{
         right: 50%;
-        bottom: $defaultPadding*2;
+        bottom: #{$defaultPadding*2};
         z-index: 1;
         margin-left: -1.25em;
         animation: bounceBottom 1s;

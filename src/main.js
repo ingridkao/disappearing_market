@@ -7,7 +7,6 @@ import './registerServiceWorker';
 
 Vue.config.productionTip = false;
 
-/* eslint-disable */
 import 'leaflet/dist/leaflet.css';
 /* leaflet icon */
 delete L.Icon.Default.prototype._getIconUrl;
@@ -16,7 +15,6 @@ L.Icon.Default.mergeOptions({
     iconUrl: require('leaflet/dist/images/marker-icon.png'),
     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
-/* eslint-disable */
 
 import _ from 'lodash';
 Vue.prototype._ = _;

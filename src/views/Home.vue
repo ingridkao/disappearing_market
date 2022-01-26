@@ -123,13 +123,13 @@ export default {
             position: absolute;
             transition: all 2s;
             &.logoBox{
-                top: $defaultPadding;
+                top: #{$defaultPadding};
                 z-index: 2;
                 &.page0{
                     left: 3.5em;
                 }
                 &.page1{
-                    left: $defaultPadding;
+                    left: #{$defaultPadding};
                 }
                 a{
                     display: inline-block;
@@ -150,7 +150,7 @@ export default {
                 text-align: left;
                 &.page0{
                     top: 4em;
-                    left: $defaultPadding;
+                    left: #{$defaultPadding};
                 }
                 //&.page1{
                 //     position: relative;
@@ -227,8 +227,8 @@ export default {
                 }
             }
             &.editorBox{
-                right: $defaultPadding/2;
-                bottom: $defaultPadding*1.6;
+                right: calc($defaultPadding / 2);
+                bottom: #{$defaultPadding*1.6};
                 z-index: 1;
                 width: calc(100vw - 6em);
                 text-align: right;
@@ -253,13 +253,13 @@ export default {
                 }
             }
             &.infoBtnBox{
-                bottom: $defaultPadding;     
+                bottom: #{$defaultPadding};
                 z-index: 1;
                 &.instructionsBtn{
-                    left: $defaultPadding;
+                    left: #{$defaultPadding};
                 }
                 &.explanationBtn{
-                    left: $defaultPadding*5;
+                    left: #{$defaultPadding*5};
                 }
                 button{
                     @extend .circleBtn;
@@ -284,7 +284,7 @@ export default {
                 z-index: 3;
                 width: 32em;
                 left: calc(50vw - 16em);
-                bottom: $defaultPadding*16;
+                bottom: #{$defaultPadding*16};
                 padding: 0.5em 1em;
                 background-color: rgba($whiteColor, 0.8);
                 a{
@@ -322,7 +322,7 @@ export default {
                 }
                 @media screen and (max-width: 600px){
                     width: calc(100vw - #{$defaultPadding});
-                    left: $defaultPadding/2;
+                    left: calc($defaultPadding / 2);
                     bottom: 25vh;
                     padding: 1em 1em 0.5em;
                 }
